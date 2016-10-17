@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+    <title>Welcome   Center</title>
+ 
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.4 -->
+    <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+   	<!-- Theme style -->
+    <link href="../../dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link href="../../dist/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="../jquery.jgrowl.css" type="text/css"/>
+    <script src="../../dist/js/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <script src="../../plugins/jQuery/jquery1.11.2.min.js"></script>
+	<script>
+	$(document).ready(function() {
+        setInterval(function() {
+        	
+        	nextAvailable();
+        }, 5000);
+	});
+	
+	</script>
+	
+	
+	
+	<script language="JavaScript">
+		
+	var flag1=false;
+	function setVisibility(id1, id2, id3, visibility) {
+			document.getElementById(id1).style.display = 'none';
+			document.getElementById(id2).style.display = 'none';
+			document.getElementById(id3).style.display = 'none';
+			
+			
+			if(flag1==false && id1=='addToQueue1')
+			{
+			document.getElementById(id1).style.display = visibility;
+			flag1=true;
+			}
+			else
+			{
+			document.getElementById(id1).style.display = 'none';
+			flag1=false;
+			}
+			
+		}
+	</script>
+	<script type="text/javascript">
+			function pop(div) {
+			
+				document.getElementById(div).style.display = 'block';
+			}
+			function hide(div) {
+				document.getElementById(div).style.display = 'none';
+			}
+			//To detect escape button
+			document.onkeydown = function(evt) {
+				evt = evt || window.event;
+				if (evt.keyCode == 27) {
+					hide('popDiv');
+				}
+			};
+		</script>
+      <style>
+			.ontop {
+				z-index: 999;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				display: none;
+				position: fixed;				
+				background-color: rgba(0,0,0,0.75);
+				/* 
+				color: #aaaaaa;
+				opacity: .95;
+				 */
+				 /* filter: alpha(opacity = 50); */
+			}
+			#popup {
+				width: 300px;
+				height: 200px;
+				position: absolute;
+				padding:40px;
+				color: #000000;
+				border-radius:3px;
+				background-color: #ffffff;
+				/* To align popup window at the center of screen*/
+				top: 50%;
+				left: 50%;
+				margin-top: -100px;
+				margin-left: -150px;
+			}
+		</style>
+	
+  </head>
+  <body class="skin-blue sidebar-mini sidebar-collapse" onload="dispRepName();">
+    <div id="popDiv" class="ontop form-group has-feedback">
+			<table  id="popup" >
+				<tr>
+					<td align="center" >	
+					<b>Name:</b><p class="login-box-msg" id="cName"><p>
+					<b>Phone:</b><h6><i><span id="cPhone"></span></i></h6>
+					<b>Type:</b><h6><i><span id="cType"></span></i></h6>
+					<b>Reason:</b><h6><i><span id="cReason"></span></i></h6>
+					<b>Description:</b><h6><i><span id="DescId"></span></i></h6><br><br>
+					<a href="#" class="btn btn-primary btn-block btn-flat" onClick="hide('popDiv')"><i class="fa fa-check-circle"></i>Close</a><br>
+		
+					</td>
+				</tr>
+			</table>
+		</div>
+    
+    <div class="wrapper">
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1 class="box-title jsValue"></h1>
+           
+          <ol class="breadcrumb">
+            <li><a href="javascript:goToMyQueue();"><i class="fa fa-dashboard"></i>Home</a></li>
+            <li class="active">My Queue</li>
+            <li><a href="../../QueueSalesRepLogin.html">Log Out</a></li>
+            
+          </ol>
+        </section>
+
+        <!-- Main content -->
+             <section class="invoice">
+			<div class="box box-info">
+			<div class="box-header">
+			  <h3 class="box-title">Add Customer to Queue</h3>
+			</div>
+			<div class="box-body">
+			  <div class="row">
+				<div class="col-xs-12">
+					<table>
+					<tr>
+					<td width="40%"><input type="radio" name="r3" class="flat-red" onclick="setVisibility('addToQueue1', 'addToQueue2', 'addToQueue3', 'inline');" />Add to Queue </td>
+					<!-- <td width="30%"><input type="radio" name="r3" class="flat-red" onclick="setVisibility('addToQueue2', 'addToQueue1', 'addToQueue3', 'inline');" disabled/>Online Pickup</td>
+				    <td width="40%"> <input type="radio" name="r3" class="flat-red" onclick="setVisibility('addToQueue3', 'addToQueue1', 'addToQueue2', 'inline');" disabled/>Appointment Check In</td> -->
+				    </tr>
+				    </table>				
+				</div>
+			  </div>
+			</div><!-- /.box-body -->	
+			</div><!-- /.box -->
+		
+		<!-- Add Customer to Queue -->
+		<form id="addForm" onsubmit="savechanges();">
+		<div id="addToQueue1" class="collapse">			
+			<!-- Table -->
+			<div class="box box-info">
+			<div class="box-body">					
+			  <div class="row">
+				<div class="col-xs-12 table-responsive">
+				  <table class="table table-bordered table-hover">
+					<tbody class="text-black">
+					  <tr>
+						<td colspan="2"><label for="description" class="text-black"> Reason for visit</label></td>
+					  </tr>
+						<td>Select Reason</td>
+						<td><div class="input-group">
+							<select class="input-control select2" id="selReason" required>
+							  <option selected="selected"></option>
+							  <option>Sign up for home phone, internet</option>
+							  <option value="Review or Change my wireless service" >Review/Change my wireless service</option>
+							  <option>Discuss my wireless bill</option>
+							  <option>Setting up my wireless device</option>
+							  <option>Upgrade my wireless device</option>
+							  <option>Sign up for wireless service</option>
+							  <option>Pickup online order</option>
+							  <option>Pickup IPhone</option>
+							  <option>Quick Sale</option>
+							  <option>Other</option>
+							</select>
+						  </div><!-- /.input-group -->
+						  <tr>
+						  <td>Phone number</td>
+						 <td> <input class="" id="phone"  placeholder="Phone" onkeypress="return event.charCode > 47 && event.charCode < 58;" maxlength="10" required ></input>
+						 <a href="javascript:checkExisting();" class="btn btn-info btn-sm" ><i class="fa fa-check-circle"></i></a>
+						 </td>
+						  <!-- <input type="checkbox" name="c3" class="flat-red"/> Quick Sale (Accessory Sale, Online Pickup) </td>-->
+					  </tr>	
+						  <tr>
+						   <td>Customer Type</td>
+						  <td><div class="input-group">
+						 
+							<select class="input-control select2" id="selCust" required>
+							  <option selected="selected"></option>
+							  <option value="Existing Customer">Wireless/Home Phone</option>
+							  <option>New Customer</option>
+							  <option>Other</option>
+							</select>
+							
+						  </div><!-- /.input-group -->	
+						  </tr>
+						  
+					  
+					  <tr>
+						<td colspan="2"><label for="description" class="text-black">Customer Information</label>
+						</td>
+					  </tr>
+					  <tr>
+						<td width="15%">First Name</td>
+						<td><input class="form-control input-sm" id="firstName" placeholder="First Name" required></input></td>
+					  </tr>
+					  <tr>
+						<td>Last Name</td>
+						<td><input class="form-control input-sm" id="lastName" placeholder="Last Name" required></td>
+					  </tr>
+					  
+					  <tr>
+					  <!-- <tr>
+						<td colspan="2"><label for="description" class="text-black" disabled> SMS Options </label> NOTE: SMS messages will only be sent to the phone number listed above.</td>
+					  </tr>
+					  <tr>
+						<td colspan="2"><input type="checkbox" name="sms1" id="sms1"class="flat-red" disabled/> Send FREE SMS when customer is next in line to be helped </td>
+					  </tr>
+					  <tr>
+						<td colspan="2"><input type="checkbox" name="sms2" name="sms2" class="flat-red" disabled/> Send FREE SMS when it's the customer's turn to be helped </td>
+					  </tr> -->
+						<tr>
+						  <td colspan="2">Assign Sales Rep </td>
+					  </tr>
+					  <tr>
+						  <td colspan="2"><div class="input-group">
+							<select class="input-control" style="width: 140px;" size="5" id="selRep">						
+							  <option selected="selected" value="NEXT AVAILABLE">Next Available</option>
+							</select>
+						  </div><!-- /.input-group -->	</td>
+					  </tr>
+					  <tr>
+						<td colspan="2"><label for="description" class="text-black" >Customer Identification</label>
+						</td>
+					  </tr>
+					  <tr>
+						<td colspan="2"><textarea id="comment" class="form-control input-sm" rows="3" placeholder="Enter ..." required></textarea></td>
+					  </tr>
+					</tbody>
+				  </table>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+			<div class="row">
+			  <div class="col-xs-12">
+				  <button type="submit" class="btn btn-info btn-sm" ><!-- <i class="fa fa-check-circle"></i> --> Done</Button>
+				</div>
+			</div><!-- /.row -->
+			</div><!-- /.box-body -->	
+			</div><!-- /.box -->						  
+		</div>
+		</form>
+		
+		<!-- Add Customer to Queue -->
+		<div id="addToQueue2" class="collapse">			
+			<!-- Table -->
+			<div class="box box-info">
+			<div class="box-body">
+			  <div class="row">
+				  <div class="callout callout-info">
+					Online Orders Ready for Pickup.
+				  </div>
+				 </div>
+				
+				  <!-- Table row -->
+				  <div class="row">
+					<div class="col-xs-12 table-responsive">
+					  <table class="table table-striped">
+						<thead>
+						  <tr>
+							<th>Customer Name</th>
+							<th>Wireless Number</th>
+							<th>Order Number</th>
+							<th>Add to Queue</th>
+						  </tr>
+						</thead>
+						<tbody>
+						  <tr>
+							<td>Danny</td>
+							<td>988-314-1516</td>
+							<td>6899591773</td>
+							<td><a href="queue.html" class="btn btn-primary btn-sm" onclick="addToQueue()"><i class="fa fa-check-circle"></i> Add</a></td>
+						  </tr>
+						  <tr>
+							<td>Ramsay</td>
+							<td>921-202-0327</td>
+							<td>6899640070</td>
+							<td><a href="queue.html" class="btn btn-primary btn-sm" onclick=""><i class="fa fa-check-circle"></i> Add</a></td>
+						  </tr>
+						  <tr>
+							<td>Shiney</td>
+							<td>988-213-5817</td>
+							<td>6902422691</td>
+							<td><a href="queue.html" class="btn btn-primary btn-sm" onclick=""><i class="fa fa-check-circle"></i> Add</a></td>
+						  </tr>
+						  <tr>
+							<td>Dan</td>
+							<td>870-229-11122</td>
+							<td>6903430184</td>
+							<td><a href="queue.html" class="btn btn-primary btn-sm" onclick=""><i class="fa fa-check-circle"></i> Add</a></td>
+						  </tr>
+						  <tr>
+							<td>Chris</td>
+							<td>988-314-9856</td>
+							<td>6903242103</td>
+							<td><a href="queue.html" class="btn btn-primary btn-sm" onclick=""><i class="fa fa-check-circle"></i> Add</a></td>
+						  </tr>
+						</tbody>
+					  </table>
+					</div><!-- /.col -->
+				  </div><!-- /.row -->
+
+				  <!-- this row will not appear when printing -->
+				  <div class="row">
+					<div class="col-xs-12">
+					  <a href="#" class="btn btn-info btn-sm" onclick=""><i class="fa fa-check-circle"></i> Search All Orders</a>
+					</div>
+				  </div><!-- /.row -->
+			</div><!-- /.box-body -->	
+			</div><!-- /.box -->						  
+		</div>
+		
+		<!-- Add Customer to Queue -->
+		<div id="addToQueue3" class="collapse">			
+			<!-- Table -->
+			<div class="box box-info">
+			<div class="box-body">
+			  <div class="row">
+				  <div class="callout callout-info">
+					Online Appointments
+				  </div>
+			  </div>
+				
+			  <!-- Table row -->
+			  <div class="row">
+				<div class="col-xs-12 table-responsive">
+				  <table class="table table-striped">
+					<thead>
+					  <tr>
+						<th>Customer Name</th>
+						<th>Wireless Number</th>
+						<th>Customer Type</th>
+						<th>Add to Queue</th>
+					  </tr>
+					</thead>
+					<tbody>
+					  <tr>
+						<td>Danny</td>
+						<td>988-314-1516</td>
+						<td>Existing</td>
+						<td><a href="queue.html" class="btn btn-primary btn-sm" onclick=""><i class="fa fa-check-circle"></i> Add</a></td>
+					  </tr>
+					  <tr>
+						<td>Ramsay</td>
+						<td>921-202-0327</td>
+						<td>Existing</td>
+						<td><a href="queue.html" class="btn btn-primary btn-sm" onclick=""><i class="fa fa-check-circle"></i> Add</a></td>
+					  </tr>
+					  <tr>
+						<td>Shiney</td>
+						<td></td>
+						<td>New</td>
+						<td><a href="queue.html" class="btn btn-primary btn-sm" onclick=""><i class="fa fa-check-circle"></i> Add</a></td>
+					  </tr>
+					</tbody>
+				  </table>
+				</div><!-- /.col -->
+			  </div><!-- /.row -->
+
+			  <!-- this row will not appear when printing -->
+			  <div class="row">
+				<div class="col-xs-12">
+				  <a href="#" class="btn btn-info btn-sm" onclick=""><i class="fa fa-check-circle"></i> Search</a>
+				</div>
+			  </div><!-- /.row -->
+			</div><!-- /.box-body -->	
+			</div><!-- /.box -->						  
+		</div>
+		
+		<!-- <div class="row">
+          <div class="callout callout-info">
+            Customers waiting in queue <a href="#" class="btn btn-info btn-sm" onclick="getMessage();" id="addToQueueButton1"><i class="fa fa-refresh"></i></a>
+  		  </div>
+    	</div> -->
+		
+		<!--  <div class="row" id="myTableDataUpgradeID">
+					<div class="col-xs-12 table-responsive">
+					  	<table class="table table-condensed table-hover bg-info" id="myTableDataUpgrade">
+						<thead class="text-black">
+						  <tr>
+							<th>Description</th>
+							<th>Item ID</th>
+							<th>Unit Price</th>
+							<th>&nbsp;</th>
+						  </tr>
+						</thead>
+						<tbody class="text-black">
+						</tbody>
+						</table>
+					</div>
+					</div> -->
+					
+          <!-- Table row -->
+          <!-- <div class="row" id="refresh" >
+            <div class="col-xs-12 table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Customer Name</th>
+					<th>Customer Type</th>
+                    <th>Id</th>
+                    <th>Description</th>
+					<th>Waiting since</th>
+					<th>Sales Rep assigned</th>
+					<th>Status</th>
+					<th>New Assignee</th>
+                  </tr>
+                </thead>
+                
+				<tbody class="table table-striped" id="myTableDataUpgrade">
+                </tbody>
+                
+              </table>
+            </div>/.col
+          </div>/.row
+ -->
+          <!-- this row will not appear when printing -->
+          <div class="row">
+            <div class="col-xs-12">
+              
+            </div>
+          </div>
+        </section>
+        
+        
+        
+        
+        
+        
+        
+        <section class="invoice">
+			<div class="box box-info">
+			<div class="box-header" align="center">
+			  <h3 class="box-title" >Customer Waiting In Queue</h3><h3 class="box-title jsValue"></h3>
+			</div>
+			<div class="box-body">
+			  <div class="row">
+				
+				<!-- <div class="row"> -->
+          			<div class="callout callout-info">
+            			Asigned Customer  <input type="hidden" id="hiddenOption" value=""><a href="#"  onclick="getRepName();" id="addToQueueButton1"><i class="fa fa-refresh"></i></a>
+  		  			</div>
+    			<!-- </div> -->
+				<div class="col-xs-12 table-responsive">
+              	<table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+					<th>Customer Type</th>
+                    <th>Id</th>
+                    <th>Description</th>
+					<th>Waiting since</th>
+					<th>Action</th>
+					<th></th>
+                  </tr>
+                </thead>
+				<tbody class="table table-striped" id="myTableDataUpgrade1">
+                </tbody>
+              </table>
+            </div>
+            </div>
+            
+            <div class="row">
+          			<div class="callout callout-info">
+            			Next In Line <a href="#"  onclick="nextAvailable();" id="addToQueueButton2"><i class="fa fa-refresh"></i></a>
+  		  			</div>
+    			<!-- </div> -->
+				<div class="col-xs-12 table-responsive">
+              	<table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+					<th>Customer Type</th>
+                    <th>Id</th>
+                    <th>Description</th>
+					<th>Waiting since</th>
+					<th>Assignee</th>
+					<th></th>
+                  </tr>
+                </thead>
+				<tbody class="table table-striped" id="myTableDataUpgrade2">
+                </tbody>
+              </table>
+            </div>
+            
+            <!-- <div class="row"> -->
+            <div class="col-xs-12" align="center">
+              
+            </div>
+          <!-- </div> -->
+
+			  </div>
+			</div><!-- /.box-body -->	
+			</div><!-- /.box -->	
+		</section>
+			
+			  <div class="row">
+				<div class="col-xs-12">
+				<!--   <a href="#" class="btn btn-info btn-sm" onclick=""><i class="fa fa-check-circle"></i> Search</a> -->
+				</div>
+			  </div><!-- /.row -->
+			</div><!-- /.box-body -->	
+			</div><!-- /.box -->						  
+		
+	
+          <!-- this row will not appear when printing -->
+          
+        </section><!-- /.content -->
+       
+      </div><!-- /.content-wrapper -->
+    
+      <!-- Add the sidebar's background. This div must be placed
+           immediately after the control sidebar -->
+      <div class="control-sidebar-bg"></div>
+    </div><!-- ./wrapper -->
+
+    <!-- jQuery 2.1.4 -->
+   <script src="../../dist/js/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <!-- Bootstrap 3.3.2 JS -->
+    <script src="../../bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <!-- FastClick -->
+    <script src="../../plugins/fastclick/fastclick.min.js" type="text/javascript"></script>
+    <!-- AdminLTE App -->
+    <script src="../../dist/js/app.min.js" type="text/javascript"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="../../dist/js/demo.js" type="text/javascript"></script>
+    <script src="../../dist/js/queue.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../jquery.jgrowl.js"></script>
+    <script src="../../plugins/localhost/localHostLink.js"></script>
+    
+    <script type="text/javascript">
+    
+    var repName = window.sessionStorage.getItem('repName');
+    var desig=window.sessionStorage.getItem('desig');
+    
+	/* function getQueryVariable(variable) 
+	{
+  		var query = window.location.search.substring(1);
+  		var vars = query.split("&");
+  		for (var i=0;i<vars.length;i++) 
+  		{
+    		var pair = vars[i].split("=");
+    		if (pair[0] == variable) 
+    		{
+      		 return pair[1];
+    		}
+  		} 
+  		//alert('Query Variable ' + variable + ' not found');
+	} */
+	
+    function nextAvailable()
+    {
+		//alert("going into next available web serivice");
+		
+		var url= hostURL+"getRepNext/"+repName;
+		
+		//alert(url);
+		$("#myTableDataUpgrade2").empty();
+		$.ajax( {
+			type: "GET",
+			data: "{}",
+			url: url,		
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
+			}).then(function(response)
+					{
+						var users = response;
+						
+						$.each(users, function(index, user) 
+								{
+									window.sessionStorage.setItem('Discription',user.qComment);
+									window.sessionStorage.setItem('Phone',user.phone);
+									window.sessionStorage.setItem('Reason',user.reason);
+									window.sessionStorage.setItem('Type',user.type);
+									window.sessionStorage.setItem('Name',user.fName+" "+user.lName);
+									
+									var i=new Date(user.qDate).toLocaleString();
+									i=i.split(",");
+									$("#myTableDataUpgrade2").append
+									('<tr><td>'+user.fName+'</td>'+ '<td>'+user.type+'</td>'+
+											'<td>'+user.queueId+'</td>'+'<td>'+user.reason+'</td>'+'<td>'+i[1]+'</td><td>'+user.sales_REP_ASSIGNED+'</td><td><a href="javascript:getOptionValue(1,'+user.queueId+');" class="btn btn-info btn-sm" ><i class="fa fa-check-circle"></i>Assist</a></td><a href="javascript:getHiddenOption('+user.queueId+');" class="fa fa-check-circle"></a></td></tr>'); //class="glyphicon glyphicon-ok"
+		    
+									return false;
+								});
+		        
+					
+			});
+
+    }
+    
+    function getHiddenOption(repId)
+    {
+    	option=document.getElementById('hiddenOption').value;
+    	//alert("Id Selected was: "+repId+" Option slected was : "+option );
+    	
+		if(option=='Remove')
+		{
+			
+			//alert("inside remove");
+			var url=hostURL+"rmv/"+repId;
+			//alert(url);
+			$("#myTableDataUpgrade1").empty();
+			$.ajax( {
+				type: "GET",
+				data: "{}",
+				url: url,		
+				contentType: "application/json; charset=utf-8",
+				dataType: "json",
+				}).then(function(response){
+					var jsonString=JSON.stringify(response);
+					window.sessionStorage.setItem('UpdatedQueue',jsonString);
+					getRepName();
+					//alert(window.sessionStorage.getItem('UpdatedQueue'));
+				});
+			  
+		}
+		
+		 else if(option=='Not Found')
+			{
+			 //alert("inside not found");
+			 var url=hostURL+"notFound/"+repId;
+			
+			$("#myTableDataUpgrade2").empty();
+			$.ajax( {
+				type: "GET",
+				data: "{}",
+				url: url,		
+				contentType: "application/json; charset=utf-8",
+				dataType: "json",
+				}).then(function(response){
+					var jsonString=JSON.stringify(response);
+					window.sessionStorage.setItem('UpdatedQueue',jsonString);
+					nextAvailable();
+					getRepName();
+					//alert(window.sessionStorage.getItem('UpdatedQueue'));
+				});
+			
+			
+			}
+		else if(option=='Still Browsing')
+			{
+				//alert("inside still browsing");
+			 var url=hostURL+"stillBrowsing/"+repId;
+			
+			$("#myTableDataUpgrade2").empty();
+			$.ajax( {
+				type: "GET",
+				data: "{}",
+				url: url,		
+				contentType: "application/json; charset=utf-8",
+				dataType: "json",
+				}).then(function(response){
+					var jsonString=JSON.stringify(response);
+					window.sessionStorage.setItem('UpdatedQueue',jsonString);
+					nextAvailable(); 
+					//alert(window.sessionStorage.getItem('UpdatedQueue'));
+				});
+			 
+			
+			 } 
+    
+    	
+    }
+    
+    function setHiddenOption(opt)
+    {
+    	//alert(opt);
+    	document.getElementById('hiddenOption').value=opt;
+    }
+    
+    function getRepName()
+	{
+		//alert("Welcome "+repName);
+		//alert("going into web serivice");	
+		var url= hostURL+"getRepQueue/"+repName;
+		var rmv="'Remove'";
+		//alert(url);
+		$("#myTableDataUpgrade1").empty();
+		$.ajax( {
+			type: "GET",
+			data: "{}",
+			url: url,		
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
+			}).then(function(response)
+					{
+						var users = response;
+						
+						$.each(users, function(index, user) 
+								{
+									//alert(user.fname,user.queueId);
+						        	 var a ='<div class="input-group">';
+									 var b ='<select class="input-control select2" id="sel1" onchange="setHiddenOption(this.options[this.selectedIndex].value);">';
+									 var c ='<option selected="selected"></option>  ';
+									 var d ='<option value="Still Browsing">Still Browsing</option>';
+									 var e =' <option value="Not Found">Not Available</option> ';
+								     var f ='<option value="Remove">Complete</option>';
+								 	 var g ='</select>';
+									 var i =new Date(user.qDate).toLocaleString();
+									 i=i.split(",");
+									
+									$("#myTableDataUpgrade1").append
+									('<tr><td>'+user.fName+'</td>'+ '<td>'+user.type+'</td>'+
+											'<td>'+user.queueId+'</td>'+'<td>'+user.reason+'</td>'+'<td>'+i[1]+'</td><td>'+a+b+c+e+f+g+'</td><td><a href="javascript:getHiddenOption('+user.queueId+');" class="btn btn-info btn-sm" ><i class="fa fa-check-circle"></i>Submit</a></td></tr>'); //class="glyphicon glyphicon-ok"
+									return false;
+								});
+		        
+						 
+			});
+		
+		
+	}
+    function getOptionValue(option,repId){
+    	if( option==1)
+		{
+		document.getElementById("DescId").innerHTML=window.sessionStorage.getItem('Discription');
+		document.getElementById("cName").innerHTML=window.sessionStorage.getItem('Name');
+		document.getElementById("cPhone").innerHTML=window.sessionStorage.getItem('Phone');
+		document.getElementById("cType").innerHTML=window.sessionStorage.getItem('Type');
+		document.getElementById("cReason").innerHTML=window.sessionStorage.getItem('Reason');
+		
+		pop('popDiv');
+		var url= hostURL+"assist/"+repId+"/"+repName;
+	
+		$("#myTableDataUpgrade2").empty();
+		$.ajax( {
+					type: "GET",
+					data: "{}",
+					url: url,		
+					contentType: "application/json; charset=utf-8",
+					dataType: "json",
+				}).then(function(response){
+					var jsonString=JSON.stringify(response);
+					window.sessionStorage.setItem('UpdatedQueue',jsonString);
+					nextAvailable();
+					getRepName(); 
+					//alert(window.sessionStorage.getItem('UpdatedQueue'));
+				});					
+		
+		
+		} 
+ 	}
+    
+    function dispRepName()
+    {
+		
+    	nextAvailable();
+    	getRepName();
+    	var $jsValue = document.querySelector('.jsValue');
+		$jsValue.innerHTML = "&nbsp;" + repName;
+		//var repNameList;			                
+		var users=JSON.parse(window.sessionStorage.getItem('RepNameList'));
+			$.each(users, function(index, user) 
+							{
+								var opt = document.createElement("option");
+				                document.getElementById("selRep").options.add(opt);
+				                opt.text = user.first_name;
+				                opt.value = user.first_name;					
+							});	
+		
+		
+		
+		/* getMessage() */;
+    }
+    function goToMyQueue()
+    {
+    	if(desig=='MGR')
+    	{	
+    		var url="queue.html";
+			window.location.href = url;
+    	}
+    	else
+    		{
+    		var url="rep_home.html";
+			window.location.href = url;	
+    		}
+    }
+    
+    function checkExisting()
+	{
+		var phone=document.getElementById("phone").value;
+		var url= hostURL+"checkExe/"+phone;    
+		$.ajax( {
+					type: "GET",
+					data: "{}",
+					url: url,		
+					contentType: "application/json; charset=utf-8",
+					dataType: "json",
+					}).then(function(response)
+							{
+								var users = response;
+								var jsonString=JSON.stringify(users);
+								
+								if (jsonString=="[]")
+									{
+										document.getElementById("selCust").value="New Customer";
+										document.getElementById("firstName").value ="";
+										document.getElementById("lastName").value = "";
+									}
+								else
+									{
+											$.each(users, function(index, user) 
+											{
+												document.getElementById("firstName").value = user.first_name;
+												document.getElementById("lastName").value = user.last_name;
+												document.getElementById("selCust").value="Existing Customer";
+											});
+									}
+								
+							});
+		
+		
+	}
+</script>
+  </body>
+</html>

@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html>
+  <head>
+   
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+    <title>Welcome  Center | Queue</title>
+    
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    
+    <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="../../plugins/jQueryUI/jquery-ui.css">
+    
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+   	
+    
+    
+    <link href="../../dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+    
+    <link href="../../dist/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
+	
+	<link href="../../plugins/datepicker/datepicker3.css" rel="stylesheet" type="text/css" />
+	<script src="../../plugins/jQuery/jquery1.11.2.min.js"></script>
+	<script>
+	
+	$(document).ready(function() {
+    	$("#datepicker").datepicker({ dateFormat: 'dd-M-yy' });
+    	//$.jGrowl.defaults.position = 'center';
+    	
+    	setInterval(function() {
+        	getMessage();}
+    		, 5000);
+    	
+	});
+	
+	function updateCache()
+	{
+		var url= hostURL+"getAllRep/";                
+		$.ajax( {
+			type: "GET",
+			data: "{}",
+			url: url,		
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
+			}).then(function(response)
+					{
+						var users = response;
+						window.sessionStorage.setItem('RepNameList',JSON.stringify(users));
+		}); 
+    	dispRepName();
+	}
+		var flag1=false;
+		var flag2=false;
+		var flag3=false;
+		function setVisibility(id1, id2, id3, visibility) 
+		{
+			document.getElementById(id1).style.display = 'none';
+			document.getElementById(id2).style.display = 'none';
+			document.getElementById(id3).style.display = 'none';
+		
+			if(flag1==false && id1=='addToQueue1')
+				{
+				document.getElementById(id1).style.display = visibility;
+				flag1=true;
+				}
+			else if(flag1==true && id1=='addToQueue1')
+				{
+				document.getElementById(id1).style.display = 'none';
+				flag1=false;
+				}
+			else if(flag2==false && id1=='addToQueue2')
+				{
+				document.getElementById(id1).style.display = visibility;
+				flag2=true;
+				}
+			else if(flag2==true && id1=='addToQueue2')
+				{
+				document.getElementById(id1).style.display = 'none';
+				flag2=false;
+				}
+			else if(flag3==false && id1=='addToQueue3')
+				{
+					document.getElementById(id1).style.display = visibility;
+					flag3=true;
+				}
+			else
+				{
+					document.getElementById(id1).style.display = 'none';
+					flag3=false;
+				}
+		}
+		
+		
+	</script>
+	
+	<script src="../../plugins/jQuery/jquery1.12.2.min.js" ></script>
+	
+  </head>
+  <body class="skin-blue sidebar-mini sidebar-collapse" onload="updateCache();">
+    <div class="wrapper">
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1 class="box-title">Welcome</h1><h1 class="box-title jsValue"></h1>
+          <ol class="breadcrumb">
+            <li class="active"><i class="fa fa-dashboard"></i>Home</li>
+            <li><a href="javascript:goToMyQueue();">My Queue</a></li>
+            <li><a href="queueDisplay.html">Queue View</a></li>
+            <li><a href="../../QueueSalesRepLogin.html">Log Out</a></li>
+          </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="invoice">
+			<div class="box box-info">
+			<div class="box-header">
+			  <h3 class="box-title">Add Customer to Queue</h3>
+			</div>
+			<div class="box-body">
+			  <div class="row">
+				<div class="col-xs-12">
+					<table>
+					<tr>
+					<td align="left" width=20%><input type="radio"  name="r3" class="flat-red"  onclick="setVisibility('addToQueue1', 'addToQueue2', 'addToQueue3', 'inline');" />Add to Queue </td>
+					<td align="center" width=30%><input type="radio"  name="r3" class="flat-red" onclick="setVisibility('addToQueue2', 'addToQueue1', 'addToQueue3', 'inline');"/>Queue History</td>
+				    <td align="right" width=30%> <input type="radio" name="r3" class="flat-red" onclick="setVisibility('addToQueue3', 'addToQueue1', 'addToQueue2', 'inline');"/>Register/DeRegister Rep</td>
+				    </tr>
+				    </table>				
+				</div>
+			  </div>
+			</div><!-- /.box-body -->	
+			</div><!-- /.box -->
+		
+		<form id="addForm" onsubmit="savechanges();">
+		<div id="addToQueue1" class="collapse">			
+			<!-- Table -->
+			<div class="box box-info">
+			<div class="box-body">					
+			  <div class="row">
+				<div class="col-xs-12 table-responsive">
+				  <table class="table table-bordered table-hover">
+					<tbody class="text-black">
+					  
+					  <tr>
+						<td colspan="2"><label for="description" class="text-black" > Reason for visit</label></td>
+					  </tr>
+					  <tr>
+						<td>Select Reason</td>
+						<td><div class="input-group">
+							<select class="input-control select2" id="selReason" required>
+							  <option selected="selected"></option>
+							  <option>Sign up for home phone, internet</option>
+							  <option value="Review or Change my wireless service" >Review/Change my wireless service</option>
+							  <option>Discuss my wireless bill</option>
+							  <option>Setting up my wireless device</option>
+							  <option>Upgrade my wireless device</option>
+							  <option>Sign up for wireless service</option>
+							  <option>Pickup online order</option>
+							  <option>Pickup IPhone</option>
+							  <option>Quick Sale</option>
+							  <option>Other</option>
+							</select>
+						  </div>
+						  <!-- /.input-group -->
+						  <tr>
+						  <td>Phone number</td>
+						 <td> <input class="" id="phone" placeholder="Phone" onkeypress="return event.charCode > 47 && event.charCode < 58;" maxlength="10" required></input>
+						 <a href="javascript:checkExisting();" class="btn btn-info btn-sm" ><i class="fa fa-check-circle"></i></a>
+						 </td>
+						  <!-- <input type="checkbox" name="c3" class="flat-red"/> Quick Sale (Accessory Sale, Online Pickup) </td>-->
+					  </tr>	
+						  <tr>
+						   <td>Customer Type</td>
+						  <td><div class="input-group">
+						 
+							<select class="input-control select2" id="selCust" required>
+							  <option selected="selected"></option>
+							  <option value="Existing Customer">Wireless/Home Phone</option>
+							  <option>New Customer</option>
+							 <!--  <option>Other</option> -->
+							</select>
+							
+						  </div><!-- /.input-group -->	
+						  </tr>
+						  
+					  <!-- <tr>
+						<td colspan="2"><label for="description" class="text-black" disabled> SMS Options </label> NOTE: SMS messages will only be sent to the phone number listed above.</td>
+					  </tr>
+					  <tr>
+						<td colspan="2"><input type="checkbox" name="sms1" id="sms1"class="flat-red" disabled/> Send FREE SMS when customer is next in line to be helped </td>
+					  </tr>
+					  <tr>
+						<td colspan="2"><input type="checkbox" name="sms2" name="sms2" class="flat-red" disabled/> Send FREE SMS when it's the customer's turn to be helped </td>
+					  </tr> -->
+					  <tr>
+						<td colspan="2"><label for="description" class="text-black">Customer Information</label>
+						</td>
+					  </tr>
+					  <tr>
+						<td width="15%">First Name</td>
+						<td><input class="form-control input-sm" id="firstName" placeholder="First Name" required></input></td>
+					  </tr>
+					  <tr>
+						<td>Last Name</td>
+						<td><input class="form-control input-sm" id="lastName" placeholder="Last Name" required></td>
+					  </tr>
+						<tr>
+						  <td colspan="2">Assign Sales Rep </td>
+					  </tr>
+					  <tr>
+						  <td colspan="2"><div class="input-group">
+							<select class="input-control" style="width: 140px;" size="5" id="selRep">						
+							  <option selected="selected" value="NEXT AVAILABLE">Next Available</option>
+							</select>
+						  </div><!-- /.input-group -->	</td>
+					  </tr>
+					  <tr>
+						<td colspan="2"><label for="description" class="text-black" >Customer Identification</label>
+						</td>
+					  </tr>
+					  <tr>
+						<td colspan="2"><textarea id="comment" class="form-control input-sm" rows="3" placeholder="Enter ..." required></textarea></td>
+					  </tr>
+					</tbody>
+				  </table>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+			<div class="row">
+			  <div class="col-xs-12">
+				   <button type="submit" class="btn btn-info btn-sm" ><!-- <i class="fa fa-check-circle"></i> --> Done</Button>
+			  </div>
+			</div><!-- /.row -->
+			</div><!-- /.box-body -->	
+			</div><!-- /.box -->						  
+		</div>
+		</form>
+		<!-- Queue History -->
+		<div id="addToQueue2" class="collapse">			
+			<!-- Table -->
+			<div class="box box-info">
+			<div class="box-body">
+			  <div class="row">
+				  <div class="callout callout-info">
+					Queue History &nbsp; &nbsp;<input style="width:100px;color: #000000;background-color: #FFFFFF;" id="datepicker" value="DD-MMM-YYYY"></input>&nbsp;&nbsp;<a href="javascript:getHistory();" class="fa fa-check-circle"></a>
+				  </div>
+				 </div>
+				
+				  <!-- Table row -->
+				<div class="row"  >
+            		<div class="col-xs-12 table-responsive">
+              		<table class="table table-striped" id="activity">
+                	<thead>
+                  	<tr>
+                    <th>Customer Name</th>
+                    <th>Reason</th>
+					<th>Arival Time</th>
+                    <th>Assist Time</th>
+                    <th>Close Time</th>
+					<th>Sales Rep assigned</th>
+					</tr>
+                </thead>
+                
+				<tbody class="table table-striped" id="myTableDataUpgradeX">
+                </tbody>
+              
+              </table>
+              <button id="exportexcel" onclick="$('#activity').tableExport({ type: 'excel', escape: 'false' })" class="btn btn-info btn-sm" >Export to excel!</Button>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+
+				  <!-- this row will not appear when printing -->
+				
+			</div><!-- /.box-body -->	
+			</div><!-- /.box -->						  
+		</div>
+		
+		<!-- Add Customer to Queue -->
+		<div id="addToQueue3" class="collapse">			
+			
+			<div class="box box-info">
+			<div class="box-body">
+			  <div class="row">
+				  <div class="callout callout-info">
+					Edit Rep Information
+				  </div>
+			  </div>
+				
+			<!--  -->
+					
+			<div class="row">
+				<div class="col-xs-12 table-responsive">
+				  <form id="RepForm" onsubmit="saveRegistation();">
+				  <table class="table table-bordered table-hover" style="width:50%; float:left ">
+					<tbody class="text-black">
+					  <tr>
+						<td colspan="2"><label for="description" class="text-black">Select to add Rep</label>
+						</td>
+					  </tr>
+					  <tr>
+						<td width="15%">First Name</td>
+						<td><input class="form-control input-sm" id="first_name" placeholder="First Name" required></input></td>
+					  </tr>
+					  <tr>
+						<td>Last Name</td>
+						<td><input class="form-control input-sm" id="last_name" placeholder="Last Name" required></td>
+					  </tr>
+					  <tr>
+						<td colspan="2"><label for="description" class="text-black" > Additional Details</label></td>
+					  </tr>
+					  <tr>
+						<td>Select Position</td>
+						<td><div class="input-group">
+							<select class="input-control select2" id="desig" required>
+							  <option selected="selected"></option>
+							  <option value="MGR">Manager</option>
+							  <option value="REP" >Sales Rep</option>
+							</select>
+						  </div><!-- /.input-group -->	
+						  <tr>
+						  <td>Phone number</td>
+						 <td> <input class="form-control input-sm" id="contact_no" placeholder="Phone" onkeypress="return event.charCode > 47 && event.charCode < 58;" maxlength="10" required></input></td>
+						  
+					  </tr>
+					  
+						<tr>
+						<td>Username(Email Id)</td>
+						<td><input class="form-control input-sm" id="email" placeholder="Username" required></td>
+					  	</tr>
+					  
+					  
+					  <tr>
+						<td>Password</td>
+						<td><input class="form-control input-sm" id="password" placeholder="Password" required></td>
+					  </tr>
+					  <tr>
+					  
+					  </tr>
+					  
+					  
+					</tbody>
+				  <tr><td><button type="submit"  style= " justify-content: center; " class="btn btn-info btn-sm" ><i class="fa fa-check-circle"></i>Register Rep</Button></td></tr>
+				  </table>
+				  
+				  </form>
+				  <form onsubmit="rmvRep();">
+				  
+				  <table class="table table-bordered table-hover" style="width:50%; float:right ">
+				  <tbody class="text-black">
+					  <tr>
+						<td colspan="2"><label for="description" class="text-black">Select to Remove Rep</label>
+						</td>
+					  </tr>
+					  
+					  
+						<tr>
+						<td>Rep Name</td>
+						<td><div class="input-group">
+							<select class="input-control select2" id="rmvName" required>
+							  <option selected="selected"></option>
+							  <!-- <option value="MGR">Manager</option>
+							  <option value="REP" >Sales Rep</option> -->
+							</select>
+						  </div>	
+						
+							
+						
+					</tbody>
+				  
+				  </table>
+				  <button type="submit" style= "justify-content: center; align :center;" class="btn btn-info btn-sm" ><i class="fa fa-check-circle"></i>Deregister Rep</Button>
+				  </form>
+				  
+				  
+				</div>
+			</div>
+		</div>
+		</div>	
+			
+		</div>					  
+		
+		<div class="row">
+          <div class="callout callout-info">
+            Customers waiting in queue <!-- <a href="#" class="btn btn-info btn-sm" onclick="getMessage();" id="addToQueueButton1"><i class="fa fa-refresh"></i></a> -->
+  		  </div>
+    	</div>
+		
+		
+					
+          <!-- Table row -->
+          <div class="row"  >
+            <div class="col-xs-12 table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+					<th>Customer Type</th>
+                    <th>Id</th>
+                    <th>Description</th>
+					<th>Waiting since</th>
+					<th>Assignee</th>
+					<th>Status</th>
+					<th>New Assignee</th>
+                  </tr>
+                </thead>
+				<tbody class="table table-striped" id="myTableDataUpgrade">
+                </tbody>
+              
+              </table>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+
+          <!-- this row will not appear when printing -->
+          <div class="row">
+            <div class="col-xs-12">
+              
+            </div>
+          </div>
+        </section><!-- /.content -->
+       
+      </div><!-- /.content-wrapper -->
+      
+      <!-- Add the sidebar's background. This div must be placed
+           immediately after the control sidebar -->
+      <div class="control-sidebar-bg"></div>
+    </div><!-- ./wrapper -->
+
+    <!-- jQuery 2.1.4 -->
+    <script src="../../dist/js/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <!-- Bootstrap 3.3.2 JS -->
+    <script src="../../bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <!-- FastClick -->
+    <!-- <script src="../../plugins/fastclick/fastclick.min.js" type="text/javascript"></script> -->
+    <!-- AdminLTE App -->
+    <script src="../../dist/js/app.min.js" type="text/javascript"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="../../dist/js/demo.js" type="text/javascript"></script>
+    <script src="../../dist/js/queue.js" type="text/javascript"></script>
+    <script src="../../plugins/datepicker/bootstrap-datepicker.js"></script>
+    <script src="../../plugins/jQueryUI/jquery-ui.js"></script>
+    
+   	<script src="../../dist/js/tableExport.js"></script>
+	<script src="../../dist/js/jquery.base64.js"></script>
+	<script src="../../dist/js/html2canvas.js"></script>
+	<script src="../../dist/js/jspdf/libs/base64.js"></script>
+	<script src="../../dist/js/jspdf/libs/sprintf.js"></script>
+	<script src="../../dist/js/jspdf/jspdf.js"></script>
+	<script src="../../plugins/localhost/localHostLink.js"></script>
+	
+	<script>
+	var repName = window.sessionStorage.getItem('repName');
+	function dispRepName()
+    {
+		
+		var $jsValue = document.querySelector('.jsValue');
+		$jsValue.innerHTML =repName;
+		getMessage();
+		var users=JSON.parse(window.sessionStorage.getItem('RepNameList'));
+		//alert(users);
+		$.each(users, function(index, user) 
+						{
+							var opt = document.createElement("option");
+			                document.getElementById("selRep").options.add(opt);
+			                opt.text = user.first_name;
+			                opt.value = user.first_name;
+			           });	
+		//var select = document.getElementById("rmvName");
+		$.each(users, function(index, user) 
+				{
+						$('#rmvName').append($('<option>', {
+		    			value:user.email,
+		    			text:user.first_name +" "+user.last_name+" ("+user.email+")"
+		    		
+		    			}));
+		    	});//end of each	
+		
+    }
+	
+	function goToMyQueue()
+	{
+		var url = "rep_queue.html";
+		window.location.href = url;
+	}
+	
+	function getHistory()
+	{
+		
+		var date=document.getElementById("datepicker").value;
+		var oDate = date.substring(0, 2)+"-"+date.substring(3, 6).toUpperCase()+"-"+date.substring(7, 11);
+		//alert(oDate);
+		$("#myTableDataUpgradeX").empty();
+		var urlX=hostURL+"getHistory/"+oDate;
+		//alert(urlX);
+		$.ajax( {
+					type: "GET",
+					data: "{}",
+					url: urlX,		
+					contentType: "application/json; charset=utf-8",
+					dataType: "json",
+					}).then(function(response)
+													{
+										var users = response;
+										
+										var fe = JSON.stringify(users);
+										//alert(fe);
+										$.each(users, function(index, user) 
+												{
+													
+											var arr=new Date(user.arrival_TIME).toLocaleString();
+											arr=arr.split(",");
+											var ass=new Date(user.assist_TIME).toLocaleString();
+											ass=ass.split(",");
+											var cls=new Date(user.close_TIME).toLocaleString();
+											cls=cls.split(",");
+													$("#myTableDataUpgradeX").append
+													('<tr><td>'+user.fname+'</td><td>'+user.reason+'</td><td>'+arr[1]+'</td><td>'+ass[1]+'</td><td>'+cls[1]+'</td><td>'+user.sales_REP_ASSIGNED+'</td></tr>'); //class="glyphicon glyphicon-ok"
+										
+													//var repNameList;			                
+													
+											
+												});
+						        });
+ 
+	}
+	
+	function saveRegistation()
+	{
+		//alert("inside registation");
+		
+		var first_name=document.getElementById("first_name").value;
+		var last_name=document.getElementById("last_name").value;
+		var contact_no=document.getElementById("contact_no").value;
+		var desig=document.getElementById("desig").value;
+		var email=document.getElementById("email").value;
+		var password=document.getElementById("password").value;
+		//alert(first_name+last_name+contact_no+desig+email+password);
+		
+		
+		var url=hostURL+"saveRep/"+first_name+"/"+last_name+"/"+contact_no+"/"+desig+"/"+email+"/"+password;
+		//alert(url);
+		$.ajax( {type: "GET",
+			data: "{}",
+			url: url,		
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
+			}).then(function(response){
+				alert("addition successfful");
+			});
+		
+		
+	}
+	
+	function rmvRep()
+	{
+		
+		var email=document.getElementById("rmvName").value;
+		email=email.replace('.','&');
+		var url=hostURL+"repremove/"+email;
+		//alert(url);
+		$.ajax( {type: "GET",
+			data: "{}",
+			url: url,		
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
+			}).then(function(response){
+				alert("remove successful");
+			});
+		
+		
+		}
+	function checkExisting()
+	{
+		var phone=document.getElementById("phone").value;
+		var url=hostURL+"checkExe/"+phone;    
+		$.ajax( {
+					type: "GET",
+					data: "{}",
+					url: url,		
+					contentType: "application/json; charset=utf-8",
+					dataType: "json",
+					}).then(function(response)
+							{
+								var users = response;
+								var jsonString=JSON.stringify(users);
+								if (jsonString=="[]")
+									{
+										//$.jGrowl("New Customer");
+										document.getElementById("selCust").value="New Customer";
+										document.getElementById("firstName").value ="";
+										document.getElementById("lastName").value = "";
+									}
+								else
+									{
+											$.each(users, function(index, user) 
+											{
+												//$.jGrowl("Existing Customer");
+												document.getElementById("firstName").value = user.first_name;
+												document.getElementById("lastName").value = user.last_name;
+												document.getElementById("selCust").value="Existing Customer";
+											});
+									}
+								
+							});
+		
+		
+	}
+	</script>
+  </body>
+</html>
